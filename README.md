@@ -1,57 +1,71 @@
-# Aurora AI Platform 
-**Deployable 3D Digital Human SaaS architecture.**
+<div align="center">
+  <h1>✨ Aurora AI ✨</h1>
+  <p><strong>The Next-Gen 3D Digital Human SaaS Platform</strong></p>
+  <p>Live, low-latency, photorealistic conversational AI agents for modern enterprises.</p>
 
-## Repository Overview
-This monolithic repository contains both the frontend (Next.js Application + React Three Fiber Engine) and the backend (FastAPI + LangChain + ElevenLabs TTS pipeline).
-
-### 1. `frontend/`
-- **Next.js 15 App Router**
-- Features:
-  - `src/app/page.tsx`: The main public landing page.
-  - `src/app/dashboard`: The Admin Panel for SaaS tenant management (Active Sessions, RAG Knowledge, Agent specific configs).
-  - `src/app/embed/[agentId]`: The isolated viewport injected via an `iframe` onto customer websites.
-  - `src/components/3d`: The WebGL canvas wrapping realistic `.glb` Avatars. Handles lighting and audio/viseme tracking maps.
-  - `public/widget.js`: The ultra-lightweight Vanilla JS snippet given to your SaaS customers.
-
-### 2. `backend/`
-- **FastAPI (Python 3.12)**
-- Features:
-  - High-performance, low-latency concurrent open `WebSocket` connection handling via Redis/Memory.
-  - **LLM Engine:** Streaming responses iteratively generated via OpenAI (`app/services/llm/engine.py`).
-  - **Real-Time Voice Pipeline:** As sentences form, they are routed to ElevenLabs to stream pure Base64 chunked Audio + Viseme Syncs (Vowel tracking markers) back over the WebSocket pipeline to drive the 3D model mouth. (`app/services/voice/tts.py`).
-  - **DB Models:** Full PostgreSQL SaaS architecture (Tenants, Users, Sessions, Agents) written via SQLAlchemy. (`app/models/all_models.py`).
+  <p>
+    <a href="#"><img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg" alt="Status" /></a>
+    <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Frontend-Next.js%2015-black.svg" alt="Frontend" /></a>
+    <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg" alt="Backend" /></a>
+    <a href="https://threejs.org/"><img src="https://img.shields.io/badge/3D-React%20Three%20Fiber-purple.svg" alt="3D Engine" /></a>
+  </p>
+</div>
 
 ---
 
-## Deployment Playbook (Production)
+## 🚀 Overview
 
-### Backend Deployment (Render or AWS App Runner)
-1. Provide the following System Config:
+**Created by: [smd408411@gmail.com](mailto:smd408411@gmail.com)**
+
+Aurora AI is a complete monolithic repository containing a production-ready WebGL frontend and a high-performance Python FastAPI websocket backend. It is designed from the ground up to serve as a deployable B2B SaaS product, empowering businesses to embed real-time 3D conversational AI agents onto their websites.
+
+## 🏗️ Architecture
+
+### 1. `frontend/` (The Application)
+A highly polished Next.js 15 application running on React-Three-Fiber.
+- **`src/app/page.tsx`**: A stunning, premium dark-mode public landing page demonstrating the live agent.
+- **`src/app/dashboard`**: The Admin Multi-Tenant Panel for SaaS customers to manage their RAG Knowledge bases, connection logs, and billing.
+- **`src/app/embed/[agentId]`**: The isolated, glassmorphic viewport designed to be injected via an iframe onto client websites.
+- **`src/components/3d`**: The WebGL engine wrapping rigged `.glb` Ready Player Me avatars. Features cinematic lighting and procedural animations (breathing, blinking, lip-sync).
+
+### 2. `backend/` (The Neural Engine)
+A scalable Python 3.12 microservice architected for ultra-low latency.
+- **High-Performance WebSockets**: Concurrent connection handling capable of streaming raw audio bytes directly into the React browser context.
+- **LLM Engine**: Advanced streaming responses bound to tools and vector databases (`app/services/llm/engine.py`).
+- **Voice Pipeline**: Real-time integration with ElevenLabs to process Base64 audio + Viseme logic markers, dynamically driving the 3D model's mouth shapes in the browser (`app/services/voice/tts.py`).
+
+---
+
+## 💻 Deployment Playbook (Production)
+
+### Backend Deployment (Render / AWS / Fly.io)
+1. Provide the following system variables in your production host:
    ```env
    DATABASE_URL=postgresql+asyncpg://user:pass@host/db
    OPENAI_API_KEY=sk-...
    ELEVENLABS_API_KEY=sk-...
    ```
-2. Build from the root via Docker:
+2. Build via the provided Dockerfile:
    ```bash
    cd backend
    docker build -t aurora-backend -f Dockerfile .
    docker run -p 8000:8000 -d aurora-backend
    ```
-   *Note: Ensure your load balancer supports WebSocket Upgrade headers natively without dropping persistent connections.*
+*Ensure your production load balancer maps `wss://` headers perfectly for persistent WebSocket socket lifecycles.*
 
 ### Frontend Deployment (Vercel)
-1. Point Vercel to the `frontend/` directory.
-2. Select Framework preset: **Next.js**.
-3. Env variables:
+The absolute easiest way to deploy the web application is directly on Vercel.
+1. Connect your GitHub repository to Vercel.
+2. Select the `frontend` directory as the **Root Directory** in the Vercel project settings.
+3. Import the following production variables:
    ```env
    NEXT_PUBLIC_API_URL=https://api.yourdomain.com
    NEXT_PUBLIC_WS_URL=wss://api.yourdomain.com
    ```
+4. Click **Deploy**.
 
-### 3D Asset Compression (Vital for scaling)
-Place your rigged character `.glb` files into `frontend/public/models/`. You **MUST** run them through Draco compression first using `gltf-pipeline` to shrink 40mb realistic models down to <3mb for <1s time-to-interactive metric.
+## 🎨 Asset Management 
+Place your fully rigged `.glb` character files into `frontend/public/models/avatar.glb`. For production scale, always run 3D assets through Draco compression prior to hosting.
 
 ---
-
-*Generated by Antigravity*
+*Built for the future of interactive AI.*
