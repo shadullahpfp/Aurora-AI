@@ -1,0 +1,19 @@
+{
+  "name": "aurora-ai",
+  "version": "1.0.0",
+  "description": "3D Digital Human SaaS Platform",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "npm run start --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "backend:install": "pip install -r backend/requirements.txt",
+    "backend:dev": "cd backend && uvicorn app.main:app --reload",
+    "docker:up": "docker-compose -f backend/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f backend/docker-compose.yml down",
+    "start:all": "concurrently \"npm run backend:dev\" \"npm run dev\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
