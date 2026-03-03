@@ -63,6 +63,10 @@ export default function AuroraPlatform() {
               <span className="px-3 py-1.5 ml-3 text-[10px] font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full flex items-center gap-1.5 uppercase tracking-widest shadow-[0_0_15px_rgba(52,211,153,0.1)]">
                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span> AI Active
               </span>
+            ) : readyState === 3 ? (
+              <span className="px-3 py-1.5 ml-3 text-[10px] font-semibold text-red-400 bg-red-400/10 border border-red-400/20 rounded-full flex items-center gap-1.5 uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 bg-red-400 rounded-full"></span> Offline Mode
+              </span>
             ) : (
               <span className="px-3 py-1.5 ml-3 text-[10px] font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-full flex items-center gap-1.5 uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-bounce"></span> Initializing Engine...
@@ -106,14 +110,15 @@ export default function AuroraPlatform() {
                 <div className="w-10 h-10 rounded-full bg-violet-600/30 border border-violet-500/50 flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-violet-300" />
                 </div>
-                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#121212] ${readyState === 1 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#121212] ${readyState === 1 ? 'bg-emerald-500' : readyState === 3 ? 'bg-red-500' : 'bg-amber-500'}`} />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white tracking-wide">Aurora AI Core</h3>
                 <p className="text-[11px] font-medium text-emerald-400/80 uppercase tracking-wider">
-                  {status === 'thinking' ? "Synthesizing..." :
-                    status === 'speaking' ? "Transmitting..." :
-                      "Awaiting Input"}
+                  {readyState === 3 ? "System Offline" :
+                    status === 'thinking' ? "Synthesizing..." :
+                      status === 'speaking' ? "Transmitting..." :
+                        "Awaiting Input"}
                 </p>
               </div>
             </div>
@@ -193,7 +198,7 @@ export default function AuroraPlatform() {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={readyState === 1 ? "Message Aurora..." : "System initializing..."}
+                placeholder={readyState === 1 ? "Message Aurora..." : readyState === 3 ? "Connection failed." : "System initializing..."}
                 disabled={readyState !== 1}
                 className="w-full bg-white/5 border border-white/10 focus:border-violet-500/50 focus:bg-white/10 rounded-full py-3.5 pl-12 pr-14 text-sm text-white placeholder:text-white/40 outline-none transition-all shadow-inner disabled:opacity-50"
               />

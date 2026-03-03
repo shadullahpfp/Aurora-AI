@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import { Scene } from "@/components/3d/Scene";
 import { Mic, Send, Volume2, Sparkles, StopCircle, Zap } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useWebSocket } from "@/hooks/useWebSocket";
 
-export default function EmbedWidgetPage({ params }: { params: { agentId: string } }) {
+export default function EmbedWidgetPage({ params }: { params: Promise<{ agentId: string }> }) {
+    const { agentId } = use(params);
     const [inputMessage, setInputMessage] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -16,8 +17,8 @@ export default function EmbedWidgetPage({ params }: { params: { agentId: string 
     // Setup standard Websocket url pointing to Agent ID injected via params
     const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws/chat";
     const { sendTextMessage, readyState } = useWebSocket({
-        url: `${WS_URL}/${params.agentId}?session=embed_${Date.now()}`,
-        onConnect: () => console.log(`Widget logic bound to Agent ID: ${params.agentId}`),
+        url: `${WS_URL}/${agentId}?session=embed_${Date.now()}`,
+        onConnect: () => console.log(`Widget logic bound to Agent ID: ${agentId}`),
     });
 
     // Auto-scroll logic
@@ -33,14 +34,14 @@ export default function EmbedWidgetPage({ params }: { params: { agentId: string 
             try {
                 const data = JSON.parse(event.data);
                 if (data.type === 'HOST_MESSAGE') {
-                    console.log(`Received context from host domain for ${params.agentId}:`, data.text);
+                    console.log(`Received context from host domain for ${agentId}:`, data.text);
                 }
             } catch (e) { }
         };
 
         window.addEventListener("message", handleHostMessage);
         return () => window.removeEventListener("message", handleHostMessage);
-    }, [params.agentId]);
+    }, [agentId]);
 
     const handleSend = () => {
         if (!inputMessage.trim()) return;
@@ -68,6 +69,8 @@ export default function EmbedWidgetPage({ params }: { params: { agentId: string 
                         </div>
                         {readyState === 1 ? (
                             <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-black animate-pulse" />
+                        ) : readyState === 3 ? (
+                            <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-black" />
                         ) : (
                             <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full border-2 border-black" />
                         )}
@@ -75,7 +78,7 @@ export default function EmbedWidgetPage({ params }: { params: { agentId: string 
                     <div>
                         <h3 className="text-sm font-bold text-white tracking-wide">Aurora Embed</h3>
                         <p className="text-[10px] uppercase tracking-wider font-semibold">
-                            {readyState === 1 ? <span className="text-emerald-400">System Ready</span> : <span className="text-amber-400">Initializing...</span>}
+                            {readyState === 1 ? <span className="text-emerald-400">System Ready</span> : readyState === 3 ? <span className="text-red-400">Offline</span> : <span className="text-amber-400">Initializing...</span>}
                         </p>
                     </div>
                 </div>
@@ -144,7 +147,7 @@ export default function EmbedWidgetPage({ params }: { params: { agentId: string 
                         value={inputMessage}
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                        placeholder={readyState === 1 ? "Ask me anything..." : "Waiting for backend..."}
+                        placeholder={readyState === 1 ? "Ask me anything..." : readyState === 3 ? "Connection failed." : "Waiting for backend..."}
                         disabled={readyState !== 1}
                         className="w-full bg-white/5 border border-white/10 focus:border-violet-500/50 focus:bg-white/10 rounded-full py-2.5 pl-10 pr-10 text-[13px] text-white placeholder:text-white/40 outline-none transition-all"
                     />
