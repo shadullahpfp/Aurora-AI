@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  :root {
+    --background: #000000;
+    --foreground: #ffffff;
+    
+    /* Brand Colors */
+    --brand-primary: #8b5cf6; /* Violet */
+    --brand-secondary: #0ea5e9; /* Light Blue */
+    --brand-accent: #10b981; /* Emerald */
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased flex flex-col min-h-screen text-white font-sans overflow-hidden bg-black;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl shadow-[0_8px_32px_0_rgba(139,92,246,0.15)];
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400;
+  }
+
+  .gradient-bg {
+    @apply bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/10 via-black to-black;
+  }
+  
+  .glow-ring {
+    @apply relative flex items-center justify-center;
+  }
+  .glow-ring::before {
+    content: '';
+    @apply absolute inset-0 rounded-full animate-ping opacity-20 bg-emerald-500 scale-150;
+  }
+}
+
+/* Scrollbar styling for chat */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
