@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>✨ Aurora AI ✨</h1>
+  <h1>Aurora AI</h1>
   <p><strong>The Next-Gen 3D Digital Human SaaS Platform</strong></p>
   <p>Live, low-latency, photorealistic conversational AI agents for modern enterprises.</p>
 
@@ -13,13 +13,13 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 
 **Created by: [smd408411@gmail.com](mailto:smd408411@gmail.com)**
 
 Aurora AI is a complete monolithic repository containing a production-ready WebGL frontend and a high-performance Python FastAPI websocket backend. It is designed from the ground up to serve as a deployable B2B SaaS product, empowering businesses to embed real-time 3D conversational AI agents onto their websites.
 
-## 🏗️ Architecture
+## Architecture
 
 ### 1. `frontend/` (The Application)
 A highly polished Next.js 15 application running on React-Three-Fiber.
@@ -36,7 +36,7 @@ A scalable Python 3.12 microservice architected for ultra-low latency.
 
 ---
 
-## 💻 Deployment Playbook (Production)
+## Deployment Playbook (Production)
 
 ### Backend Deployment (Render / AWS / Fly.io)
 1. Provide the following system variables in your production host:
@@ -64,7 +64,7 @@ The absolute easiest way to deploy the web application is directly on Vercel.
    ```
 4. Click **Deploy**.
 
-## 🎨 Asset Management 
+## Asset Management 
 Place your fully rigged `.glb` character files into `frontend/public/models/avatar.glb`. For production scale, always run 3D assets through Draco compression prior to hosting.
 
 ---
